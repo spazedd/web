@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Windows XP – Web Desktop</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+        :root {
+            --bliss: url("./assets/wallpaper/bliss.jpg");
+            --xp-blue-1: #4a79d9; --xp-blue-2: #2a57c7;
+            --task-1: #4d82c2; --task-2: #3a6ea5;
+            --task-border: #2a5490;
+            --start-1: #3dbb40; --start-2: #2a9e2f;
+            --win-border: #1f3f8f;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, Arial, sans-serif; }
+        body { background: #111; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .monitor { background: #e8e5db; padding: 20px 20px 34px; border-radius: 14px; box-shadow: 0 24px 60px rgba(0,0,0,.6), inset 0 2px 0 rgba(255,255,255,.7), inset 0 -2px 0 rgba(0,0,0,.08); }
+        .screen { width: min(96vw, 1100px); height: min(92vh, 680px); border-radius: 10px; overflow: hidden; position: relative; }
+        .neck, .stand { background: #d6d2c7; }
+        .neck { width: 110px; height: 18px; border-radius: 4px; margin: 8px auto 0; }
+        .stand { width: 220px; height: 14px; border-radius: 6px; margin: 6px auto 0; }
+        .desktop { height: 100%; display: flex; flex-direction: column; }
+        .bg { flex: 1; display: flex; flex-wrap: wrap; gap: 18px; align-content: flex-start; padding: 18px; color: #fff; background: #0b5ea8; background-size: cover; background-position: center; background-repeat: no-repeat; }
+        .icon { width: 82px; text-align: center; cursor: pointer; }
+        .icon img { width: 40px; height: 40px; }
+        .icon .label { font-size: 12px; text-shadow: 0 1px 2px rgba(0,0,0,.7); margin-top: 4px; }
+        .icon:hover { background: rgba(255,255,255,.18); border-radius: 6px; }
+        .taskbar { height: 38px; background: linear-gradient(var(--task-1), var(--task-2)); display: flex; align-items: center; gap: 8px; padding: 3px 6px; }
+        .start { height: 32px; display: flex; align-items: center; gap: 8px; padding: 0 14px; border-radius: 16px; cursor: pointer; color: #fff; font-weight: 700; background: linear-gradient(var(--start-1), var(--start-2)); border: 1px solid #1a6e1e; box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 1px 0 rgba(0,0,0,.2); }
+        .start:hover { filter: brightness(1.05); }
+        .tasklist { display: flex; gap: 6px; align-items: center; flex: 1; overflow: hidden; }
+        .task { min-width: 120px; height: 30px; display: flex; align-items: center; gap: 6px; padding: 0 8px; color: #fff; cursor: pointer; border-radius: 6px; background: linear-gradient(var(--task-1), var(--task-2)); border: 1px solid var(--task-border); box-shadow: inset 0 1px 0 rgba(255,255,255,.35); font-size: 12px; }
+        .task img { width: 16px; height: 16px; }
+        .tray .time { min-width: 62px; text-align: center; color: #fff; font-size: 12px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--task-border); background: linear-gradient(var(--task-1), var(--task-2)); box-shadow: inset 0 1px 0 rgba(255,255,255,.35); }
+        .menu { position: absolute; left: 8px; bottom: 42px; width: 300px; background: #e6eefb; border: 1px solid var(--xp-blue-2); border-radius: 8px; box-shadow: 0 12px 30px rgba(0,0,0,.45); display: none; flex-direction: column; z-index: 999; }
+        .menu .hdr { background: linear-gradient(var(--xp-blue-1), var(--xp-blue-2)); color: #fff; padding: 8px; border-radius: 8px 8px 0 0; font-weight: 700; }
+        .menu .item { display: flex; gap: 10px; align-items: center; padding: 8px 10px; cursor: pointer; }
+        .menu .item:hover { background: #d5e3ff; }
+        .menu .item img { width: 18px; height: 18px; }
+        .menu .sep { height: 1px; background: #aaa; margin: 4px 0; }
+        .win { position: absolute; background: #efefef; border: 1px solid var(--win-border); border-radius: 7px; display: none; flex-direction: column; box-shadow: 0 10px 26px rgba(0,0,0,.35); min-width: 430px; min-height: 260px; }
+        .titlebar { height: 26px; background: linear-gradient(var(--xp-blue-1), var(--xp-blue-2)); color: #fff; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: space-between; padding: 0 8px; border-radius: 6px 6px 0 0; cursor: move; }
+        .controls { display: flex; gap: 4px; }
+        .btn { width: 20px; height: 20px; border-radius: 4px; background: linear-gradient(#fefefe, #dcdcdc); border: 1px solid #6b6b6b; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; color: #111; }
+        .content { flex: 1; background: #fff; border: 1px solid #b9c5e0; margin: 8px; padding: 8px; border-radius: 4px; overflow: auto; }
+        .address { flex: 1; border: 1px solid #6b6b6b; padding: 4px 6px; border-radius: 4px; font-size: 13px; }
+        .btn2 { border: 1px solid #6b6b6b; background: #ececec; border-radius: 4px; padding: 5px 10px; cursor: pointer; }
+        iframe { flex: 1; border: 1px solid #b9c5e0; border-radius: 4px; background: white; }
+        textarea.notepad { width: 100%; height: 100%; border: none; outline: none; font-family: "Courier New", monospace; font-size: 13px; }
+        .calc { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .calc .display { grid-column: 1/-1; padding: 8px; background: #f7f7f7; border: 1px solid #6b6b6b; border-radius: 4px; font-size: 18px; text-align: right; }
+        .calc button { padding: 10px; border: 1px solid #6b6b6b; border-radius: 4px; background: #ececec; font-size: 16px; cursor: pointer; }
+        .paint-tools { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+        .paint-tools label { display: flex; gap: 4px; align-items: center; }
+    </style>
+</head>
+<body>
+    <div class="monitor">
+        <div class="screen">
+            <div class="desktop">
+                <div class="bg" id="bg"></div>
+                <div class="taskbar">
+                    <button class="start" id="startBtn">Start</button>
+                    <div class="tasklist" id="tasklist"></div>
+                    <div class="tray"><div class="time" id="clock">00:00</div></div>
+                </div>
+                <div class="menu" id="menu">
+                    <div class="hdr">Windows XP</div>
+                    <div class="item" data-open="ie"><img src="./assets/icons/ie.png" alt="">Internet Explorer</div>
+                    <div class="item" data-open="explorer"><img src="./assets/icons/computer.png" alt="">My Computer</div>
+                    <div class="item" data-open="docs"><img src="./assets/icons/folder.png" alt="">My Documents</div>
+                    <div class="item" data-open="notepad"><img src="./assets/icons/notepad.png" alt="">Notepad</div>
+                    <div class="item" data-open="calc"><img src="./assets/icons/calc.png" alt="">Calculator</div>
+                    <div class="item" data-open="paint"><img src="./assets/icons/paint.png" alt="">Paint</div>
+                    <div class="item" data-open="wmp"><img src="./assets/icons/wmp.png" alt="">Windows Media Player</div>
+                    <div class="item" data-open="recycle"><img src="./assets/icons/recycle.png" alt="">Recycle Bin</div>
+                    <div class="item" data-open="settings"><img src="./assets/icons/settings.png" alt="">Settings</div>
+                    <div class="sep"></div>
+                    <div class="item" id="shutdown">Shut Down…</div>
+                </div>
+
+                <!-- Windows (all fixed & functional) -->
+                <!-- IE -->
+                <div class="win" id="ie-window">
+                    <div class="titlebar"><div id="ie-title">Internet Explorer</div>
+                        <div class="controls">
+                            <div class="btn" data-act="min" data-app="ie">—</div>
+                            <div class="btn" data-act="max" data-app="ie">□</div>
+                            <div class="btn" data-act="close" data-app="ie">×</div>
+                        </div>
+                    </div>
+                    <div class="content" style="display:flex;flex-direction:column;gap:6px;padding:0;">
+                        <div style="background:#f0f0f0;border-bottom:1px solid #808080;padding:4px;display:flex;gap:4px;align-items:center;flex-wrap:wrap;">
+                            <button class="btn2" id="ie-back">Back</button>
+                            <button class="btn2" id="ie-forward">Forward</button>
+                            <button class="btn2" id="ie-refresh">Refresh</button>
+                            <button class="btn2" id="ie-home">Home</button>
+                            <button class="btn2" id="ie-stop" style="display:none;color:red;">Stop</button>
+                            <div style="flex:1;"></div>
+                            <span id="ie-status" style="font-size:11px;color:#333;">Done</span>
+                        </div>
+                        <div style="display:flex;gap:4px;padding:0 4px;align-items:center;">
+                            <span style="font-weight:bold;font-size:12px;">Address:</span>
+                            <input id="ie-url" class="address" value="https://www.microsoft.com/" style="flex:1;">
+                            <button class="btn2" id="ie-go">Go</button>
+                        </div>
+                        <iframe id="ie-frame" sandbox="allow-forms allow-modals allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation" src="https://www.microsoft.com/"></iframe>
+                    </div>
+                </div>
+                <!-- My Computer -->
+                <div class="win" id="explorer-window">
+                    <div class="titlebar"><div>My Computer</div>
+                        <div class="controls"><div class="btn" data-act="min" data-app="explorer">—</div><div class="btn" data-act="max" data-app="explorer">□</div><div class="btn" data-act="close" data-app="explorer">×</div></div>
+                    </div>
+                    <div class="content">
+                        <p><strong>Local Disk (C:)</strong> – 37 GB free of 80 GB</p>
+                        <p><strong>CD Drive (D:)</strong> – No disc inserted</p>
+                        <p><strong>Control Panel</strong>, <strong>Printers</strong>, <strong>Dial-Up Networking</strong> …</p>
+                    </div>
+                </div>
+                <!-- My Documents -->
+                <div class="win" id="docs-window">
+                    <div class="titlebar"><div>My Documents</div>
+                        <div class="controls"><div class="btn" data-act="min" data-app="docs">—</div><div class="btn" data-act="max" data-app="docs">□</div><div class="btn" data-act="close" data-app="docs">×</div></div>
+                    </div>
+                    <div class="content"><p>My Pictures, My Music, My Videos … (empty in demo)</p></div>
+                </div>
+                <!-- Notepad -->
+                <div class="win" id="notepad-window">
+                    <div class="titlebar"><div>Untitled - Notepad</div>
+                        <div class="controls"><div class="btn" data-act="min" data-app="notepad">—</div><div class="btn" data-act="max" data-app="notepad">□</div><div class="btn" data-act="close" data-app="notepad">×</div></div>
+                    </div>
+                    <div class="content"><textarea class="notepad">Hello from XP Notepad! Type here…</textarea></div>
+                </div>
+                <!-- Calculator -->
+                <div class="win" id="calc-window">
+                    <div class="titlebar"><div>Calculator</div>
+                        <div class="controls"><div class="btn" data-act="min" data-app="calc">—</div><div class="btn" data-act="max" data-app="calc">□</div><div class="btn" data-act="close" data-app="calc">×</div></div>
+                    </div>
+                    <div class="content">
+                        <div class="calc">
+                            <input class="display" id="dsp" readonly value="0"/>
+                            <button>7</button><button>8</button><button>9</button><button>/</button>
+                            <button>4</button><button>5</button><button>6</button><button>*</button>
+                            <button>1</button><button>2</button><button>3</button><button>-</button>
+                            <button>0</button><button>.</button><button>=</button><button>+</button>
+                            <button style="grid-column:1/3">C</button><button style="grid-column:3/5">Backspace</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Paint -->
+                <div class="win" id="paint-window">
+                    <div class="titlebar"><div>Untitled - Paint</div>
+                        <div class="controls"><div class="btn" data-act="min" data-app="paint">—</div><div class="btn" data-act="max" data-app="paint">□</div><div class="btn" data-act="close" data-app="paint">×</div></div>
+                    </div>
+                    <div class="content">
+                        <div class="paint-tools">
+                            <label>Color <input type="color" value="#000000"></label>
+                            <label>Size <input type="range" min="1" max="30" value="4"></label>
+                            <button class="btn2" onclick="ctx.clearRect(0,0,c.width,c.height);">Clear</button>
+                        </div>
+                        <canvas id="pCanvas" width="800" height="460" style="border:1px solid #b9c5e0;border-radius:4px;background:#fff;touch-action:none"></canvas>
+                    </div>
+                </div>
+                <!-- Windows Media Player -->
+                <div class="win" id="wmp-window">
+                    <div class="titlebar"><div>Windows Media Player</div>
+                        <div class="controls"><div class="btn" data-act="min" data-app="wmp">—</div><div class="btn" data-act="max" data-app="wmp">□</div><div class="btn" data-act="close" data-app="wmp">×</div></div>
+                    </div>
+                    <div class="content"><p>Drop an audio/video file here (demo only).</p></div>
+                </div>
+                <!-- Recycle Bin -->
+                <div class="win" id="recycle-window">
+                    <div class="titlebar"><div>Recycle Bin</div>
+                        <div class="controls"><div class="btn" data-act="min" data-app="recycle">—</div><div class="btn" data-act="max" data-app="recycle">□</div><div class="btn" data-act="close" data-app="recycle">×</div></div>
+                    </div>
+                    <div class="content"><p>The Recycle Bin is empty.</p></div>
+                </div>
+                <!-- Settings -->
+                <div class="win" id="settings-window">
+                    <div class="titlebar"><div>Settings</div>
+                        <div class="controls"><div class="btn" data-act="min" data-app="settings">—</div><div class="btn" data-act="max" data-app="settings">□</div><div class="btn" data-act="close" data-app="settings">×</div></div>
+                    </div>
+                    <div class="content">
+                        <h3>Wallpaper (Optional Change)</h3>
+                        <p>Current: Bliss (change below if wanted)</p>
+                        <div style="display:flex;gap:10px;align-items:center;margin:8px 0">
+                            <button class="btn2" onclick="setWallpaper('./assets/wallpaper/bliss.jpg')">Bliss (Default)</button>
+                            <button class="btn2" onclick="setWallpaper('teal')">Solid Teal</button>
+                            <label class="btn2" style="cursor:pointer">Custom<input type="file" accept="image/*" onchange="setWallpaper(URL.createObjectURL(this.files[0]))" style="display:none"></label>
+                        </div>
+                        <h3>Behavior</h3>
+                        <label><input type="checkbox" checked> Require double-click for icons</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="neck"></div>
+        <div class="stand"></div>
+    </div>
+<script>
+const openWins = {}; let z = 100;
+function openWindow(app) {
+  const w = document.getElementById(`${app}-window`);
+  if (!w) return;
+  if (openWins[app]) {
+    w.style.zIndex = ++z;
+    if (openWins[app].min) { w.style.display = 'flex'; openWins[app].min = false; }
+    return;
+  }
+  w.style.left = (80 + Math.random() * 200) + 'px'; w.style.top = (60 + Math.random() * 150) + 'px';
+  w.style.display = 'flex'; w.style.zIndex = ++z;
+  openWins[app] = { el: w, min: false };
+  const task = document.createElement('div'); task.className = 'task'; task.id = `task-${app}`;
+  task.innerHTML = `<img src="./assets/icons/${app}.png" alt=""><span>${w.querySelector('.titlebar > div').textContent}</span>`;
+  task.onclick = () => { openWins[app].min ? (w.style.display = 'flex', openWins[app].min = false, w.style.zIndex = ++z) : (w.style.display = 'none', openWins[app].min = true); };
+  document.getElementById('tasklist').appendChild(task);
+}
+document.querySelectorAll('.controls .btn').forEach(b => b.onclick = e => {
+  const app = e.target.dataset.app, act = e.target.dataset.act;
+  const w = document.getElementById(`${app}-window`);
+  if (act === 'close') { w.style.display = 'none'; delete openWins[app]; document.getElementById(`task-${app}`).remove(); }
+  if (act === 'min') { w.style.display = 'none'; openWins[app].min = true; }
+  if (act === 'max') { w.dataset.max = w.dataset.max === '1' ? '0' : '1'; w.style = w.dataset.max === '1' ? 'width:92vw;height:82vh;left:4vw;top:7vh;' : 'width:auto;height:auto;left:120px;top:90px;'; w.style.zIndex = ++z; }
+});
+document.querySelectorAll('.titlebar').forEach(head => head.onmousedown = e => {
+  const w = head.parentNode; if (w.dataset.max === '1') return;
+  const app = w.id.replace('-window', ''); w.style.zIndex = ++z;
+  const sx = e.clientX, sy = e.clientY, sl = parseInt(w.style.left) || 120, st = parseInt(w.style.top) || 90;
+  const mv = ev => { w.style.left = (sl + ev.clientX - sx) + 'px'; w.style.top = (st + ev.clientY - sy) + 'px'; };
+  document.addEventListener('mousemove', mv); document.addEventListener('mouseup', () => document.removeEventListener('mousemove', mv));
+});
+document.getElementById('startBtn').onclick = () => document.getElementById('menu').style.display = document.getElementById('menu').style.display === 'flex' ? 'none' : 'flex';
+document.onclick = e => { if (!e.target.closest('#menu') && !e.target.closest('#startBtn')) document.getElementById('menu').style.display = 'none'; };
+document.getElementById('menu').onclick = e => { const it = e.target.closest('.item'); if (it && it.id !== 'shutdown') openWindow(it.dataset.open); else if (it.id === 'shutdown') alert('Shutting down...'); };
+let clickTimer; document.getElementById('bg').onclick = e => { const ic = e.target.closest('.icon'); if (!ic) return; if (document.getElementById('dbl').checked) { if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; openWindow(ic.dataset.app); } else clickTimer = setTimeout(() => clickTimer = null, 260); } else openWindow(ic.dataset.app); };
+setInterval(() => document.getElementById('clock').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), 1000);
+// IE
+const frame = document.getElementById('ie-frame'), urlBox = document.getElementById('ie-url'), titleEl = document.getElementById('ie-title'), statusEl = document.getElementById('ie-status');
+const backBtn = document.getElementById('ie-back'), fwdBtn = document.getElementById('ie-forward'), refreshBtn = document.getElementById('ie-refresh'), homeBtn = document.getElementById('ie-home'), stopBtn = document.getElementById('ie-stop');
+let history = [], historyIndex = -1, loading = false;
+function navigate(url, push = true) { if (!/^https?:\/\//i.test(url)) url = 'https://' + url; if (!push) history = history.slice(0, historyIndex + 1); history.push(url); historyIndex++; updateNavButtons(); loadURL(url); }
+function loadURL(url) { loading = true; statusEl.textContent = 'Loading...'; stopBtn.style.display = 'inline-block'; urlBox.value = url; frame.src = url; }
+function updateNavButtons() { backBtn.disabled = historyIndex <= 0; fwdBtn.disabled = historyIndex >= history.length - 1; }
+frame.onload = () => { loading = false; stopBtn.style.display = 'none'; statusEl.textContent = 'Done'; const cur = frame.contentWindow.location.href; urlBox.value = cur; if (history[historyIndex] !== cur) history[historyIndex] = cur; try { titleEl.textContent = (frame.contentDocument.title || 'Untitled') + ' - Internet Explorer'; } catch (e) { titleEl.textContent = 'Internet Explorer'; } };
+document.getElementById('ie-go').onclick = () => navigate(urlBox.value.trim()); urlBox.onkeypress = e => { if (e.key === 'Enter') navigate(urlBox.value.trim()); };
+backBtn.onclick = () => { if (historyIndex > 0) { historyIndex--; loadURL(history[historyIndex]); updateNavButtons(); } };
+fwdBtn.onclick = () => { if (historyIndex < history.length - 1) { historyIndex++; loadURL(history[historyIndex]); updateNavButtons(); } };
+refreshBtn.onclick = () => frame.contentWindow.location.reload();
+homeBtn.onclick = () => navigate('https://www.microsoft.com/', true);
+stopBtn.onclick = () => { frame.src = 'about:blank'; loading = false; stopBtn.style.display = 'none'; statusEl.textContent = 'Stopped'; };
+setTimeout(() => { history = [frame.src]; historyIndex = 0; updateNavButtons(); }, 500);
+// Calculator
+const dsp = document.getElementById('dsp');
+let A = null, op = null, clearNext = false;
+function put(v) { if (v === 'C') { A = null; op = null; dsp.value = '0'; return; } if (v === 'Backspace') { dsp.value = dsp.value.length > 1 ? dsp.value.slice(0, -1) : '0'; return; } if ('+-/*'.includes(v)) { A = parseFloat(dsp.value); op = v; clearNext = true; return; } if (v === '=') { if (op !== null) { const B = parseFloat(dsp.value); dsp.value = op === '+' ? A + B : op === '-' ? A - B : op === '*' ? A * B : A / B; A = null; op = null; } return; } if (clearNext) { dsp.value = v === '.' ? '0.' : v; clearNext = false; return; } if (v === '.' && dsp.value.includes('.')) return; dsp.value = (dsp.value === '0' && v !== '.') ? v : dsp.value + v; }
+document.getElementById('calc').onclick = e => { if (e.target.tagName === 'BUTTON') put(e.target.textContent.trim()); };
+window.onkeydown = e => { if (!openWins.calc) return; const k = e.key; if ((k >= '0' && k <= '9') || k === '.') put(k); if ('+-/*'.includes(k)) put(k); if (k === 'Enter') put('='); if (k === 'Backspace') put('Backspace'); if (k === 'Escape') put('C'); };
+// Paint
+const c = document.getElementById('pCanvas'), ctx = c.getContext('2d');
+let drawing = false, last = null;
+const pos = e => { const r = c.getBoundingClientRect(); const p = e.touches ? e.touches[0] : e; return { x: p.clientX - r.left, y: p.clientY - r.top }; };
+c.onmousedown = e => { drawing = true; last = pos(e); e.preventDefault(); };
+c.onmousemove = e => { if (!drawing) return; const p = pos(e); ctx.strokeStyle = document.getElementById('pColor').value; ctx.lineWidth = document.getElementById('pSize').value; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke(); last = p; e.preventDefault(); };
+window.onmouseup = () => drawing = false;
+c.ontouchstart = e => { drawing = true; last = pos(e); e.preventDefault(); };
+c.ontouchmove = e => { if (!drawing) return; const p = pos(e); ctx.strokeStyle = document.getElementById('pColor').value; ctx.lineWidth = document.getElementById('pSize').value; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke(); last = p; e.preventDefault(); };
+window.ontouchend = () => drawing = false;
+// Settings
+document.getElementById('wpBliss').onclick = () => setWallpaper('./assets/wallpaper/bliss.jpg');
+document.getElementById('wpTeal').onclick = () => setWallpaper('teal');
+document.getElementById('wpCustom').onchange = e => { const f = e.target.files[0]; if (f) setWallpaper(URL.createObjectURL(f)); };
+// Quick-launch IE
+document.getElementById('startBtn').onclick = () => openWindow('ie');
+</script>
+</body>
+</html>
